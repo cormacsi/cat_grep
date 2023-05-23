@@ -1,0 +1,26 @@
+She says,
+Don't let go
+Never give up, it's such a wonderful life
+Don't let go
+Never give up, it's such a wonderful life
+Don't let go
+Never give up, it's such a wonderful life
+Don't let go
+Never give up, it's such a wonderful life
+She says
+
+
+
+       last_line_char = next_line[0];
+      } else {
+        char_new_line = 1;
+      }
+    }
+
+  regmatch_t pmatch[1];
+  const size_t nmatch = 1;
+  int status;
+  size_t len = 0;
+  int counter = 0, anticounter = 0, line_num = 0;
+  int reg_flag = options->i ? REG_ICASE : REG_EXTENDED;
+  regcomp(&compiled, options->pattern, reg_flag);

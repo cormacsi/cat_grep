@@ -1,0 +1,53 @@
+void pattern_f(opt *options, char *optarg) {
+  FILE *pattern_file = NULL;
+  if ((pattern_file = fopen(optarg, "r")) != NULL) {
+    char *next_line = NULL;
+    size_t pattern_len = 0;
+    int char_new_line = 0;
+    int last_line_char = 10;
+    while (getline(&next_line, &pattern_len, pattern_file) != EOF) {
+      int last = strlen(next_line) - 1;
+      if (next_line[0] != '\n') {
+        if (next_line[last] == 10) next_line[last] = '\0';
+        pattern_e(options, next_line);
+        options->f_line = 1;
+        last_line_char = next_line[0];
+      } else {
+        char_new_line = 1;
+      }
+    }
+    if (char_new_line && last_line_char != '\n') pattern_e(options, ".");
+
+    options->f_line = 0;
+    if (next_line) free(next_line);
+    if (pattern_file) fclose(pattern_file);
+  } else if (!options->s) {
+    print_error_directory(optarg);
+    options->error = 1;
+  }
+}
+
+void s21_grep_cormacsi(int argc, char **argv) {
+  opt options = {0};
+  parcer(argc, argv, &options);
+  // print_struct(&options);
+  if (argc - optind > 0 && options.pattern_index != 0) {
+    for (int i = argc - options.num_files; i < argc; i++) {
+      if (strcmp(".", argv[i]) == 0) {
+        continue;
+      }
+      options.file = fopen(argv[i], "r");
+      options.filename = argv[i];
+      if (options.file != NULL) {
+        searcher(&options);
+        end(options.file);
+      } else if (!options.s) {
+        print_error_directory(options.filename);
+        // fprintf(stderr, "grep: %s: %s", options.filename, ERROR_3);
+      }
+    }
+  } else if (!options.error) {
+    print_error(1);
+  }
+  if (options.pattern) free(options.pattern);
+}
