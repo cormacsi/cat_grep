@@ -1,4 +1,4 @@
-# Simple Bash Utils
+# cat_grep
 
 Development of Bash text utilities: cat, grep.
 
